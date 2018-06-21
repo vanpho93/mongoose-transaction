@@ -70,7 +70,7 @@ describe('Test simple transfer function', async () => {
     });
 
     it.only('Strest test, 100 transfers at one time', (done) => {
-        function create100Transfers() {
+        function create3000Transfers() {
             const output = [];
             for(let i = 0; i < 3000; i++) {
                 const transfer = TransactionService.transfer(idAccount1, idAccount2, 3).catch(error => null);
@@ -78,12 +78,12 @@ describe('Test simple transfer function', async () => {
             }
             return output;
         }
-        create100Transfers();
+        create3000Transfers();
         setTimeout(async () => {
             const account1 = await Account.findById(idAccount1);
             const account2 = await Account.findById(idAccount2);
-            console.log(account1.balance);
-            console.log(account2.balance);
+            equal(account1.balance, 2);
+            equal(account2.balance, 698);
             done();
         }, 1000);
     });
