@@ -7,8 +7,8 @@ const accountSchema = new mongoose.Schema({
 });
 
 const transactionSchema = new mongoose.Schema({
-    source: { type: mongoose.Types.ObjectId, ref: 'Account' },
-    destination: { type: mongoose.Types.ObjectId, ref: 'Account' },
+    source: { type: mongoose.Schema.Types.ObjectId, ref: 'Account' },
+    destination: { type: mongoose.Schema.Types.ObjectId, ref: 'Account' },
     status: { type: String }, // initial | pending | applied | done | cancelling | cancelled
     lastModified: { type: Date }
 });

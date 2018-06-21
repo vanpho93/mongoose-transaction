@@ -4,5 +4,14 @@
   },
   "devDependencies": {
     "mocha": "^5.2.0"
+  },
+  "name": "mongoose-transaction",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/vanpho93/mongoose-transaction.git",
+  "author": "Van Pho Nguyen <vanpho02@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "nodemon --exec mocha"
   }
 }
