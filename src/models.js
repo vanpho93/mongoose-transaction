@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const accountSchema = new mongoose.Schema({
     name: { type: String },
     email: { type: String },
-    balance: { type: Number }
+    balance: { type: Number },
+    pendingTransactions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Transaction' }]
 });
 
 const transactionSchema = new mongoose.Schema({
