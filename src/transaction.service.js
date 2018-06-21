@@ -31,10 +31,43 @@ class TransactionService {
         return transaction;
     }
 
+
     static async safeTransfer(source, destination, amount) {
         await TransactionService.validateTransferInput(source, destination, amount);
         const transaction = await Transaction({ source, destination, lastModified: new Date(), state: 'pending', amount });
-        const sourceAccount1 = await Account.findOneAndUpdate({ _id: source, pendingTransactions:  })
+        const sourceAccount1 = await Account.findOneAndUpdate(
+            {
+                _id: source,
+                pendingTransactions: { $size: 0 },
+                balance: { $gt: amount }
+            },
+            {
+                $inc: { balance: -amount },
+                $push: { pendingTransactions: transaction._id }
+            }
+        );
+        exist(sourceAccount1, 'DO_NOT_ENOUGH_MONEY', 429);
+        const destinationAccount1 = await Account.findOneAndUpdate(
+            {
+                _id: destination,
+                pendingTransactions: { $size: 0 }
+            },
+            {
+                $inc: { balance: amount },
+                $push: { pendingTransactions: transaction._id }
+            }
+        );
+        await Transaction.findByIdAndUpdate(transaction._id, { state: 'applied', lastModified: new Date() });
+        await Account.findOneAndUpdate(
+            { _id: source, pendingTransactions: transaction._id },
+            { $pull: { pendingTransactions: transaction._id } }
+        );
+        await Account.findOneAndUpdate(
+            { _id: destination, pendingTransactions: transaction._id },
+            { $pull: { pendingTransactions: transaction._id } }
+        );
+        const transactionAtTheEnd = await Transaction.findByIdAndUpdate(transaction._id, { state: 'done', lastModified: new Date() }, { new: true });
+        return transactionAtTheEnd;
     }
 }
 
