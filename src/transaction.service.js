@@ -31,7 +31,6 @@ class TransactionService {
         return transaction;
     }
 
-
     static async safeTransfer(source, destination, amount) {
         await TransactionService.validateTransferInput(source, destination, amount);
         const transaction = await Transaction({ source, destination, lastModified: new Date(), state: 'pending', amount });
