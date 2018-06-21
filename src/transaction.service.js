@@ -16,7 +16,7 @@ class TransactionService {
         const sourceAccount = await Account.findOneAndUpdate(queryObject, updateObject);
         exist(sourceAccount, 'DO_NOT_ENOUGH_MONEY', 429);
         const desinationAccount = await Account.findByIdAndUpdate(destination, { $inc: { balance: amount } });
-        const transaction = new Transaction({ source, desination, status: 'done', lastModified: new Date() });
+        const transaction = new Transaction({ source, destination, status: 'done', lastModified: new Date() });
         await transaction.save();
         return transaction;
     }
