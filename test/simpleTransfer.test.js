@@ -68,4 +68,23 @@ describe('Test simple transfer function', async () => {
         equal(account1.balance, 200);
         equal(account2.balance, 500);
     });
+
+    it.only('Strest test, 100 transfers at one time', (done) => {
+        function create100Transfers() {
+            const output = [];
+            for(let i = 0; i < 3000; i++) {
+                const transfer = TransactionService.transfer(idAccount1, idAccount2, 3).catch(error => null);
+                output.push(transfer);
+            }
+            return output;
+        }
+        create100Transfers();
+        setTimeout(async () => {
+            const account1 = await Account.findById(idAccount1);
+            const account2 = await Account.findById(idAccount2);
+            console.log(account1.balance);
+            console.log(account2.balance);
+            done();
+        }, 1000);
+    });
 });
